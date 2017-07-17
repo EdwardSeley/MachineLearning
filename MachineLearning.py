@@ -1,8 +1,6 @@
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
-from matplotlib import style
-from sklearn import datasets, linear_model
 
 def batch_gradient_descent(X, y):
 	numOfSamples = len(X)
@@ -29,8 +27,6 @@ def compute_cost(X, y, theta):
 def run():
 	data = pd.read_csv("data_file.csv", sep=",", header=None)
 	points = data.values.tolist()
-	#otherTheta = gradient_descent_runner(points, 0, 0, 0.01, 1000)
-	#newTheta = np.matrix([otherTheta[1], otherTheta[0]]).T
 	X = data.ix[:, 0]
 	xArray = np.asarray(X)
 	X = np.column_stack((xArray, np.ones(len(X))))
@@ -39,13 +35,8 @@ def run():
 	yArray = np.asarray(y)
 	y = np.matrix(y)
 	theta, costList = batch_gradient_descent(X, y)
-	print("cost: " + str(compute_cost(X, y, theta)))
-	#print("cost: " + str(compute_cost(X, y, newTheta)))
 	x = np.arange(xArray.min(), xArray.max(), 1)
-
 	f = theta[1, 0] + x * theta[0, 0]
-	#plt.scatter(xArray, yArray)
-	#plt.plot(x, f, "r"
 	fig = plt.figure()
 	ax = fig.add_subplot(111)
 	ax.set_title("Gradient Descent")
