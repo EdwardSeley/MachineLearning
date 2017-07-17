@@ -10,10 +10,10 @@ def batch_gradient_descent(X, y):
 	costList = [None] * 1000
 	newTheta = theta
 	for iteration in range(1000):
-		errors = y - X.dot(theta).T
+		errors = X.dot(theta).T - y
 		for featureNum in range(numOfFeatures):
 			partialDerivatives = errors.dot(X[:, featureNum])
-			newTheta[featureNum, 0] = theta[featureNum, 0] + alpha * 1/numOfSamples * partialDerivatives
+			newTheta[featureNum, 0] = theta[featureNum, 0] - alpha * 1/numOfSamples * partialDerivatives
 		theta = newTheta
 		costList[iteration] = compute_cost(X, y, theta)
 	return newTheta, costList
