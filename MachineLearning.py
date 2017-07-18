@@ -2,14 +2,13 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 
-def batch_gradient_descent(X, y):
-	numOfSamples = len(X)
+def batch_gradient_descent(X, y, numOfIterations):
 	numOfFeatures = X.shape[1] 
 	theta = np.matrix(np.zeros(numOfFeatures)).T
 	alpha = 0.02
-	costList = [None] * 1000
+	costList = [None] * numOfIterations
 	newTheta = theta
-	for iteration in range(1000):
+	for iteration in range(numOfIterations):
 		errors = X.dot(theta).T - y
 		for featureNum in range(numOfFeatures):
 			partialDerivatives = errors.dot(X[:, featureNum])
@@ -17,6 +16,22 @@ def batch_gradient_descent(X, y):
 		theta = newTheta
 		costList[iteration] = compute_cost(X, y, theta)
 	return newTheta, costList
+
+def stochastic_gradient_descent(X, y, numOfIterations):
+	numOfSamples = len(X)
+	numOfFeatures = X.shape[1]
+	theta = np.matrix(np.zeros(numOfFeatures)).T
+	alpha = 0.02
+	costList = [None] * numOfSamples
+	newTheta = theta
+	for iteration in range(numOfIterations):
+		for index in range(numOfSamples):
+			for featureNum in range(numOfFeatures):
+				partialDerivative = theta[featureNum, 0] * X[index, featureNum] - y[0, index]
+				newTheta[featureNum, 0] = theta[featureNum, 0] - alpha * 1/numOfSamples * partialDerivative
+			theta = newTheta
+			costList[index] = compute_cost(X, y, theta)
+	return theta, costList
 
 def compute_cost(X, y, theta):
 	totalCost = X.dot(theta).T - y
@@ -34,7 +49,8 @@ def run():
 	y = data.ix[:, 1]
 	yArray = np.asarray(y)
 	y = np.matrix(y)
-	theta, costList = batch_gradient_descent(X, y)
+	theta, costList = stochastic_gradient_descent(X, y, 13)
+	print(compute_cost(X, y, theta))
 	x = np.arange(xArray.min(), xArray.max(), 1)
 	f = theta[1, 0] + x * theta[0, 0]
 	fig = plt.figure()
